@@ -1,0 +1,43 @@
+name: Deploy to SageMaker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      # Only re-deploy when model artifacts or deploy code actually change
+      - "src/models/**"
+      - "deploy/**"
+      - ".github/workflows/deploy.yml"
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production   # optional: adds a manual approval gate in GitHub
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      SAGEMAKER_ROLE_ARN: ${{ secrets.SAGEMAKER_ROLE_ARN }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install deploy dependencies
+        run: pip install boto3 sagemaker
+
+      - name: Package model and upload to S3
+        run: python deploy/scripts/package.py
+
+      - name: Deploy SageMaker endpoint
+        run: python deploy/scripts/deploy.py

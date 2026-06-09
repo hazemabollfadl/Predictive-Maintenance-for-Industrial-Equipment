@@ -1,0 +1,16 @@
+sagemaker:
+  endpoint_name: predictive-maintenance-rul       # name of the live endpoint in AWS
+  instance_type: ml.t2.medium                     # cheapest CPU instance; upgrade to ml.c5.xlarge under load
+  initial_instance_count: 1
+
+model:
+  name: predictive-maintenance-cnn
+  framework_version: "2.0"                        # must match torch version in requirements.txt
+  python_version: py311
+  # local paths (relative to repo root) — these must exist before packaging
+  weights_path: src/models/cnn_FD001.pt
+  scaler_path: src/models/scaler_FD001.pkl
+
+s3:
+  # bucket name is injected from the S3_BUCKET env var at runtime
+  prefix: predictive-maintenance/model-artifacts  # S3 key prefix where model.tar.gz is uploaded

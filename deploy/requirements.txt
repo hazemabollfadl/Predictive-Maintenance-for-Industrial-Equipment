@@ -1,0 +1,6 @@
+# Inference environment — installed inside the SageMaker container.
+# Keep this minimal: only what inference.py actually imports.
+torch==2.0.*
+numpy==1.*
+scikit-learn==1.*
+joblib
