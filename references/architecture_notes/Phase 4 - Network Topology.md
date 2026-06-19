@@ -25,8 +25,4 @@
 * * Flattens dimensions into a 1D tensor. Linear layers mathematically cannot process 3D blocks or 2D feature maps. Flatten crushes your extracted data into a single, flat 1D vector so the standard logic gates can read it.
 
 * nn.Linear
-* * The Function: Applies a linear transformation to the incoming data. Also known as the "dense" layer. This is where the network stops looking at how data/shapes changes overtime and starts weighing all the extracted clues against each other to form a final output.
-
-* nn.Sigmoid
-* * Applies the Sigmoid mathematical function. A Linear layer might output a raw number like 42.7 or -8.4. Sigmoid forcibly compresses any number into a strict range between 0.0 and 1.0. It translates raw math into an actionable, real-world percentage.
-
+* * The Function: Applies a linear transformation to the incoming data. Also known as the "dense" layer. This is where the network stops looking at how data/shapes change over time and starts weighing all the extracted clues against each other to output the final, unbounded Remaining Useful Life (RUL) prediction.
