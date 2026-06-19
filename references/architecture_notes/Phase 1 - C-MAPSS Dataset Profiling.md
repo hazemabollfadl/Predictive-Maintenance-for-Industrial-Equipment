@@ -6,7 +6,7 @@ This minimizes from the mathematical complexity form the other three datasets wh
 * The data has no standard timestamps. Time is measured in Cycles.
 
 * End-of-Life (EOL) Assumption: The dataset consists of run-to-failure simulations. We assume the last recorded cycle for any given Engine ID is the exact point of catastrophic failure.
-
+    
 * Sensor Variance Logic: We assume not all 21 sensors carry signal. 
 Sensors with a variance of zero (flatlines) represent constant operational settings, not degradation. They must be identified and purged immediately to reduce dimensionality.
 
