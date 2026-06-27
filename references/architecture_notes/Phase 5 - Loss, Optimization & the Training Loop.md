@@ -1,23 +1,16 @@
 ## Assumptions & Logic:
 
-* Convert the numpy arrays we got from Phase_3 to Tensorflow float32 since that what PyTorch requires it
+* Data Formatting: We convert the NumPy arrays to PyTorch Tensors (torch.float32), which is the strict mathematical format required for hardware binding.
 
-* We use Mean Squared Error (MSELoss) as our Loss Function. It is the industry standard for continuous regression. The goal is to measure the physical distance between the predicted Remaining Useful Life (RUL) and the actual RUL, square that error to penalize massive misses, and minimize it to increase our model's precision.
+* Target Scaling (Gradient Collapse Prevention): We apply MinMaxScaler to the Y_train (RUL) targets, compressing massive cycle counts (e.g., 0 to 350) into a strictly positive 0.0−1.0 range. This stabilizes the initial loss calculations and prevents the optimizer from zeroing out the network weights due to exploding gradients.
 
+* The Judge: We use Mean Squared Error (MSELoss). It is the industry standard for continuous regression. It measures the physical distance between predicted and actual RUL, squaring the error to aggressively penalize massive misses.
 
-* As an optimizer for the learning rate we use Adam (Adaptive Moment Estimation). it dynamically adjusts the "learning rate" (how aggressively it changes the weights) for every single CNN filter.
+* The Optimizer: Adam (Adaptive Moment Estimation) dynamically adjusts the learning rate (weight adjustment aggression) for every individual CNN filter.
 
-* Create the learning loop (Backpropagation):
-These are the core operations of DL it's a 5 step process per batch:
-forward(): Make a prediction.
-loss(): Calculate the error.
-zero_grad(): Clear out the old adjustments from the previous batch.
-backward(): Calculate the exact mathematical adjustments needed to fix the error (Derivatives).
-step(): Actually apply those adjustments to the network's weights.
+* Hyperparameters:
+* * Batch Size (64): Dictates how many 3D sensor blocks the optimizer averages together before calculating error. 64 maximizes hardware caching efficiency.
 
-* Some numbers:
-* * We will do batches of 64 to be kind to our machines, it's how many cycles Adam optimizer calculates the error and updates the weights
-* * the learning rate of 0.001 is standard here, increasing or decreasing this will tell Adam to either aggresively overcorrect the loss function or take alot of time to learn and update the weights
-* * 15 Epochs is also a sweetspot, increasing or decreasing this results in the model 
-overfitting(It has seen the data way too much and starting to memorize instead of predict)
-underfitting(It hasn't seen the data enough times to figure out how a temperature spike correlates to the remaining lifespan curve.)
+* * Learning Rate (0.001): The mathematical sweet spot. Increasing causes violent divergence; decreasing causes glacial training times.
+
+* * The baseline boundary between underfitting (failing to map the temperature curve to the lifespan) and overfitting (memorizing the exact statistical noise of the training data).

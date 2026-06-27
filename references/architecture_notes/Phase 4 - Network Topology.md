@@ -1,28 +1,26 @@
 ## Assumptions & Logic:
 
-* We will implement PyTorch specially the "nn" Module, it stands for nueral network, PyTorch provides all the necessary building blocks, trainable layers, and loss functions needed to design deep learning models. It handles the background management of weights, biases, and structural GPU acceleration so we do not have to write them manually. (Search for it to know more, i suggest reading about the difference between it and Tensorflow)
+* We implement PyTorch's nn.Module. PyTorch handles the foundational management of weights, biases, backpropagation gradients, and GPU acceleration.
 
-* We will create a custom neural network Class, This class will inherit from nn.Module which is the foundational base class for all neural network architectures in PyTorch.
+* We utilize a kernel_size of 3 sliding across the 30-cycle window, outputting to 32 feature channels. This is an optimal constraint; increasing filter complexity risks the model memorizing simulation noise rather than genuine failure mechanics.
 
-* We will stick to a kernel size of 3 that slides throughout each of the 30 cycle, And for the out_channel we will do 32, it's standard here, the limited number of sensors produce limited amount of failuire patterns no need to go crazy. increasing this leads to the model being "too smart" it will start to memorize useless patterns thinking that they're actual failuires.
+* The linear regression head utilizes 64 neurons—a balance between computational efficiency and the capacity needed to weigh extracted relationships.
 
-* 64 neurons for our linear functions is sufficient as well it's a balance between computational complexity and the brain power needed to extract relationships between the features.
-
-* Forward function is mandatory here since it declares the order of execution, when we pass the data to our model instance PyTorch inetrcepts it and runs the Forward function to have an idea of what the correct order is.
+* The forward() function dictates the strict order of mathematical execution when data passes through the network.
 
 
 ## Pytorch nn used module dict:
 * nn.Conv1d
-* * 1-Dimensional Convolutional Layer. It slides a mathematical window across the cycles to convert raw, meaningless sensor numbers into geometric features (slopes, spikes, drops). It extracts narrative of what't happening with these sensor results.
+* * 1-Dimensional Convolutional Layer. It slides a mathematical window across the cycles to convert raw sensor numbers into geometric features (slopes, spikes, drops), extracting the degradation narrative.
 
 * nn.ReLU
-* * Rectified Linear Unit activation function. The noise destroyer. It mathematically forces any negative number to exactly 0. This instantly strips out useless signals
+* * Rectified Linear Unit activation function. It mathematically forces any negative number to exactly 0, instantly stripping out useless signals.
 
 * nn.MaxPool1d
-* * 1-Dimensional Max Pooling Layer. The compressor. It slides a window across the features and only keeps the highest number, discarding the rest.it cuts the computational friction in half and prevents the model from obsessing over the exact cycle an anomaly occurred.
+* * 1-Dimensional Max Pooling Layer. It slides a window across the features and retains only the highest activation, halving computational friction and preventing the network from over-indexing on the exact cycle an anomaly occurred.
 
 * nn.Flatten
-* * Flattens dimensions into a 1D tensor. Linear layers mathematically cannot process 3D blocks or 2D feature maps. Flatten crushes your extracted data into a single, flat 1D vector so the standard logic gates can read it.
+* * Crushes the extracted 3D/2D feature maps into a single 1D vector so the standard linear logic gates can process them.
 
 * nn.Linear
-* * The Function: Applies a linear transformation to the incoming data. Also known as the "dense" layer. This is where the network stops looking at how data/shapes change over time and starts weighing all the extracted clues against each other to output the final, unbounded Remaining Useful Life (RUL) prediction.
+* * Applies a linear transformation to the incoming data. This "dense" layer weighs all extracted clues against each other to output the final, unbounded Remaining Useful Life (RUL) prediction.
