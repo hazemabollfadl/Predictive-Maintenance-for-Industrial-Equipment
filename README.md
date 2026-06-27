@@ -21,11 +21,12 @@ Predictive-Maintenance-for-Industrial-Equipment/
 │   │   ├── processed/                  # Cleaned & transformed outputs
 │   │   └── features/                  # Feature-engineered datasets
 │   │
-│   ├── notebooks/                      # Exploratory analysis (not production code)
-│   │   ├── acquisition_and_profiling.ipynb
-│   │   ├── target_engineering.ipynb
-│   │   ├── scaling_and_3DTransformation.ipynb
-│   │   └── topology.ipynb
+│   ├── scripts/                      # Exploratory analysis (not production code)
+│   │   ├── data_pipeline.py
+│   │   ├── main_evaluation.py
+│   │   ├── model_cnn.py
+│   │   ├── visuals_presentation.ipynb
+│   │   └── random_forest.ipynb
 │   │
 │   ├── pipelines/                      # Runnable pipeline steps
 │   │   ├── ingestion/
